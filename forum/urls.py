@@ -7,6 +7,8 @@ urlpatterns = [
     path('topic/<int:topic_id>/', views.topic, name='topic'),
     # post/post_id
     path('post/<int:post_id>/', views.post, name='post'),
-    # newpost
-    path('post/newpost/', views.newpost, name='newpost'),
+    # new_post
+    path('post/newpost/', views.new_post, name='newpost'),
+    # new_comment
+    path('post/newcomment/', views.new_comment, name='newcomment'),
 ]

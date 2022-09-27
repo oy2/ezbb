@@ -43,6 +43,7 @@ class Comment(models.Model):
     comment_content = models.TextField()
     comment_post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment_visible = models.BooleanField(default=True)
+    comment_sticky = models.BooleanField(default=False)
     # date
     created_at = models.DateTimeField(auto_now_add=True)
     # visible bool

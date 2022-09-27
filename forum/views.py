@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
-from forum.forms import PostForm
+from forum.forms import PostForm, CommentForm
 from forum.models import Topic, Post
 
 
@@ -60,7 +60,7 @@ def post(request, post_id):
 
 # View for /newpost
 @login_required
-def newpost(request):
+def new_post(request):
     # if post
     if request.method == 'POST':
         # form
@@ -68,10 +68,27 @@ def newpost(request):
         # if valid
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('index')  # todo redirect to made post
     # else
     else:
         form = PostForm()
     # pass form
     context = {'form': form}
     return render(request, 'forum/form/post_form.html', context)
+
+
+# View for /newcomment
+@login_required
+def new_comment(request):
+    # if post
+    if request.method == 'POST':
+        # form
+        form = CommentForm(request.POST)
+        # if valid
+        if form.is_valid():
+            form.save()
+            return redirect('index')  # todo redirect to made comment
+        else:
+            form = CommentForm()
+            context = {'form': form}
+            return render(request, 'forum/form/comment_form.html', context)
