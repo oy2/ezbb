@@ -9,3 +9,10 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['post_topic', 'post_title', 'post_content']
 
+
+# Form for creating comments (on posts)
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment_content', 'comment_post']
+
