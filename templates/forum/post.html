@@ -12,8 +12,9 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'topic' post.post_topic.id %}">{{ post.post_topic.topic_name }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ post }}</li>
+                    <li class="breadcrumb-item"><a
+                            href="{% url 'topic' post.post_topic.id %}">{{ post.post_topic.topic_name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ post }}</li>
                 </ol>
             </nav>
         </div>

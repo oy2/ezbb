@@ -1,0 +1,29 @@
+{% if messages %}
+    {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <section class="py-4 py-xl-2">
+                <div class="container">
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                </div>
+            </section>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <section class="py-4 py-xl-2">
+                <div class="container">
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                </div>
+            </section>
+        {% else %}
+            <section class="py-4 py-xl-2">
+                <div class="container">
+                    <div class="alert alert-primary" role="alert">
+                        {{ message }}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endif %}

@@ -38,7 +38,7 @@ def topic(request, topic_id):
         # remove any post_visible=False posts
         posts = posts.filter(post_visible=True)
 
-        paginator = Paginator(posts, 10)  # show 10 posts per page
+        paginator = Paginator(posts, 5)  # show 10 posts per page
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -47,6 +47,7 @@ def topic(request, topic_id):
         return render(request, 'forum/topic.html', context)
     else:
         # 404
+        messages.add_message(request, messages.ERROR, 'Invalid topic')
         return redirect('index')
 
 
@@ -58,15 +59,18 @@ def post(request, topic_id, post_id):
     if post_requested:
         # check if post is visible
         if not post_requested.post_visible:
+            messages.add_message(request, messages.ERROR, 'Invalid post')
             return redirect('index')
         # check if post_requested.topic_id matches topic_id
         if post_requested.post_topic.id != topic_id:
+            messages.add_message(request, messages.ERROR, 'Invalid post')
             return redirect('index')
         # pass post
         context = {'post': post_requested, 'topic': post_requested.post_topic}
         return render(request, 'forum/post.html', context)
     else:
-        # 404 todo
+        # 404
+        messages.add_message(request, messages.ERROR, 'Invalid post')
         return redirect('index')
 
 
@@ -90,6 +94,7 @@ def new_post(request, topic_id):
             form.instance.post_user = request.user
             form.save()
             # redirect to post
+            messages.add_message(request, messages.SUCCESS, 'Posted successfully')
             return redirect('post', topic_id=topic_id, post_id=form.instance.id)
     # else
     else:
@@ -97,7 +102,12 @@ def new_post(request, topic_id):
         # form with topic_id as post_topic
         form.fields['post_topic'].initial = topic_id
     # pass form
-    context = {'form': form}
+    # get topic_id if exists
+    topic_requested = Topic.objects.filter(id=topic_id).first()
+    # if topic_requested doesn't exist
+    if not topic_requested:
+        return redirect('index')
+    context = {'form': form, 'topic': topic_requested}
     return render(request, 'forum/form/post_form.html', context)
 
 
@@ -114,9 +124,10 @@ def new_comment(request, topic_id, post_id):
             form.instance.comment_user = request.user
             form.save()
             # redirect to post with new comment
+            messages.add_message(request, messages.SUCCESS, 'Posted successfully')
             return redirect('post', post_id=form.instance.comment_post.id)
-        else:
-            form = CommentForm()
-            form.fields['comment_post'].initial = post_id
-            context = {'form': form}
-            return render(request, 'forum/form/comment_form.html', context)
+    else:
+        form = CommentForm()
+        form.fields['comment_post'].initial = post_id
+        context = {'form': form}
+        return render(request, 'forum/form/comment_form.html', context)

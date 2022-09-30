@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -19,6 +20,7 @@ def register(request):
             # save form
             user.save()
             # redirect to login
+            messages.add_message(request, messages.SUCCESS, 'Account created successfully')
             return redirect('login')
     # else
     else:
