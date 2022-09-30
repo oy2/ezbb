@@ -7,6 +7,7 @@ urlpatterns = [
     # register
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
+    path('profile/<int:user_id>/', views.view_user, name='view_user'),
     # login (django.contrib.auth.views.LoginView)
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     # logout (django.contrib.auth.views.LogoutView)

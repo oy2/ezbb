@@ -147,6 +147,11 @@ def new_comment(request, topic_id, post_id):
             if len(form.cleaned_data['comment_content']) > 5000:
                 messages.add_message(request, messages.ERROR, 'Comment too long')
                 return redirect('post', topic_id=topic_id, post_id=post_id)
+            # ensure post_locked is not violated
+            post_requested = Post.objects.filter(id=post_id).first()
+            if post_requested.post_locked:
+                messages.add_message(request, messages.ERROR, 'Post locked')
+                return redirect('post', topic_id=topic_id, post_id=post_id)
             form.save(commit=False)
             form.instance.comment_user = request.user
             form.save()

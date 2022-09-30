@@ -29,7 +29,9 @@
                     <div class="card">
                         <div class="card-body">
                             <p class="card-text">{{ post.post_content }}</p>
-                            <p class="card-text"><small class="text-muted">Posted by {{ post.post_user.username }}
+                            <p class="card-text"><small class="text-muted">Posted by <a
+                                    href="{% url 'view_user' post.post_user.id %}"
+                                    class="link-secondary">{{ post.post_user.username }}</a>
                                 on {{ post.created_at }}</small></p>
                         </div>
                     </div>
@@ -51,9 +53,10 @@
                             <div class="card border-danger">
                                 <div class="card-body">
                                     <p class="card-text">{{ comment.comment_content }}</p>
-                                    <p class="card-text"><small class="text-muted">Posted
-                                        by {{ comment.comment_user.username }}
-                                        on {{ comment.created_at }}</small></p>
+                                    <p class="card-text"><small class="text-muted">
+                                        Posted by <a href="{% url 'view_user' comment.comment_user.id %}"
+                                                     class="link-secondary">{{ comment.comment_user.username }}</a>
+                                        on {{ comment.created_at }} | Sticky</small></p>
                                 </div>
                             </div>
                         </div>
@@ -68,8 +71,9 @@
                             <div class="card">
                                 <div class="card-body">
                                     <p class="card-text">{{ comment.comment_content }}</p>
-                                    <p class="card-text"><small class="text-muted">Posted
-                                        by {{ comment.comment_user.username }}
+                                    <p class="card-text"><small class="text-muted">
+                                        Posted by <a href="{% url 'view_user' comment.comment_user.id %}"
+                                                     class="link-secondary">{{ comment.comment_user.username }}</a>
                                         on {{ comment.created_at }}</small></p>
                                 </div>
                             </div>
@@ -78,24 +82,11 @@
                 </div>
             </section>
         {% endif %}
-        {#        <section class="py-4 py-xl-2">#}
-        {#            <div class="container">#}
-        {#                <div class="row">#}
-        {#                    <div class="col-12 col-md-12">#}
-        {#                        <div class="card">#}
-        {#                            <div class="card-body">#}
-        {#                                <p class="card-text">{{ comment.comment_content }}</p>#}
-        {#                                <p class="card-text"><small class="text-muted">Posted#}
-        {#                                    by {{ comment.comment_user.username }} on {{ comment.created_at }}</small></p>#}
-        {#                            </div>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </section>#}
+
 
     {% endfor %}
 
-    {% include 'forum/form/comment_form.html' %}
-
+    {% if not post.post_locked %}
+        {% include 'forum/form/comment_form.html' %}
+    {% endif %}
 {% endblock %}

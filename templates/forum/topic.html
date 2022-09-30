@@ -34,8 +34,10 @@
                                         class="card-title">{{ post.post_title }}</h5></a>
                                 <h6 class="card-subtitle mb-2 text-muted">By: {{ post.post_user.username }}</h6>
                                 <p class="card-text">Last Comment
-                                    By: {{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}
-                                    on {{ topic.get_latest_comment.created_at| default:post.created_at }}</p>
+                                    By:
+                                    <a href="{% url 'view_user' topic.get_latest_comment.comment_user.id|default:post.post_user.id %}"
+                                       class="link-secondary">{{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}</a>
+                                    on {{ topic.get_latest_comment.created_at| default:post.created_at }} | Sticky {% if post.post_locked %} | Locked{% endif %}</p>
                             </div>
                         </div>
                     </div>
@@ -51,8 +53,10 @@
                                     class="card-title">{{ post.post_title }}</h5></a>
                             <h6 class="card-subtitle mb-2 text-muted">By: {{ post.post_user.username }}</h6>
                             <p class="card-text">Last Comment
-                                By: {{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}
-                                on {{ topic.get_latest_comment.created_at| default:post.created_at }}</p>
+                                By:
+                                <a href="{% url 'view_user' topic.get_latest_comment.comment_user.id|default:post.post_user.id %}"
+                                   class="link-secondary">{{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}</a>
+                                on {{ topic.get_latest_comment.created_at| default:post.created_at }} {% if post.post_locked %} | Locked{% endif %}</p>
                         </div>
                     </div>
                 </div>

@@ -30,7 +30,7 @@
                                     <div class="card-body">
                                         <h6 class="card-title">Latest</h6>
                                         <a href="{{ topic.get_latest_post_link }}" class="link-secondary"><p class="card-text">{{ topic.get_latest_post }}</p></a>
-                                        <p class="card-text">By {{ topic.get_latest_post.post_user.username }}</p>
+                                        <p class="card-text">By <a href="{% url 'view_user' topic.get_latest_post.post_user.id %}" class="link-secondary">{{ topic.get_latest_post.post_user.username }}</a></p>
                                     </div>
                                 </div>
                             {% endif %}
