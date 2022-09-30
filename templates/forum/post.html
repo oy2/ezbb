@@ -20,4 +20,45 @@
         </div>
     </section>
 
+    <!-- Display Post -->
+
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text">{{ post.post_content }}</p>
+                            <p class="card-text"><small class="text-muted">Posted by {{ post.post_user.username }}
+                                on {{ post.created_at }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Display Comments -->
+    {% for comment in comments %}
+        <section class="py-4 py-xl-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text">{{ comment.comment_content }}</p>
+                                <p class="card-text"><small class="text-muted">Posted
+                                    by {{ comment.comment_user.username }} on {{ comment.created_at }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    {% endfor %}
+
+    {% include 'forum/form/comment_form.html' %}
+
 {% endblock %}

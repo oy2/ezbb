@@ -32,6 +32,9 @@ def register(request):
 
 @login_required
 def profile(request):
-    # context = user
-    context = {'user': request.user}
+    # Get all posts by user
+    posts = request.user.post_set.all()
+    # Get all comments by user
+    comments = request.user.comment_set.all()
+    context = {'user': request.user, 'posts': posts, 'comments': comments}
     return render(request, 'accounts/profile.html', context)

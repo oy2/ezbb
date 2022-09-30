@@ -2,10 +2,67 @@
 
 {% block content %}
 
-Profile Page
-    {{ user.username }}
-    {{ user.email }}
-    {{ user.first_name }}
-    {{ user.last_name }}
+        <section class="py-4 py-xl-2">
+        <div class="container">
+            <h1>{{ user.username }}</h1>
+        </div>
+    </section>
+    <!-- User details card with email, firstname, lastname, post number (len(posts), and comment number -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.username }}</h5>
+                    <p class="card-text">Email: {{ user.email }}</p>
+                    <p class="card-text">First Name: {{ user.first_name }}</p>
+                    <p class="card-text">Last Name: {{ user.last_name }}</p>
+                    <p class="card-text">Posts: {{ posts|length }}</p>
+                    <p class="card-text">Comments: {{ comments|length }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- User posts card-->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Posts</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for post in posts %}
+                        <li class="list-group-item">
+                            <a href="{% url 'post' post.post_topic.id post.id %}">{{ post.post_title }}</a>
+                            <!--First 100 words-->
+                            <p>{{ post.post_content|truncatewords_html:100 }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User comments card -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Comments</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for comment in comments %}
+                        <li class="list-group-item">
+                            <a href="{% url 'post' comment.comment_post.post_topic.id comment.comment_post.id %}">{{ comment.comment_post.post_title }}</a>
+                            <!--First 100 words-->
+                            <p>{{ comment.comment_content|truncatewords_html:100 }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
 
 {% endblock %}

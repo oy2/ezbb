@@ -24,21 +24,35 @@
     </section>
 
     {% for post in page_obj %}
+{#        <section class="py-1 py-xl-1">#}
+{#            <div class="container">#}
+{#                <div class="bg-light border rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-1">#}
+{#                    <div class="pb-2 pb-lg-1">#}
+{#                        <a class="link-secondary" href="{% url 'post' post.post_topic.id post.id %}"><h2#}
+{#                                class="fw-bold mb-2">{{ post.post_title }}</h2></a>#}
+{#                        <h5 class="fw-bold mb-2">By: {{ post.post_user.username }}</h5><br>#}
+{#                        <p class="mb-0">Last Comment#}
+{#                            By: {{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}#}
+{#                            on {{ topic.get_latest_comment.created_at| default:post.created_at }}</p>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{#        </section>#}
+
+        <!-- Display post as card -->
         <section class="py-1 py-xl-1">
             <div class="container">
-                <div class="bg-light border rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-1">
-                    <div class="pb-2 pb-lg-1">
-                        <a class="link-secondary" href="{% url 'post' post.post_topic.id post.id %}"><h2
-                                class="fw-bold mb-2">{{ post.post_title }}</h2></a>
-                        <h5 class="fw-bold mb-2">By: {{ post.post_user.username }}</h5><br>
-                        <p class="mb-0">Last Comment
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <a href="{% url 'post' post.post_topic.id post.id %}" class="link-secondary"><h5 class="card-title">{{ post.post_title }}</h5></a>
+                        <h6 class="card-subtitle mb-2 text-muted">By: {{ post.post_user.username }}</h6>
+                        <p class="card-text">Last Comment
                             By: {{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}
                             on {{ topic.get_latest_comment.created_at| default:post.created_at }}</p>
                     </div>
-
                 </div>
             </div>
-        </section>
     {% endfor %}
 
     <section class="py-4 py-xl-2">

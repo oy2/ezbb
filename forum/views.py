@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -11,6 +13,12 @@ from forum.models import Topic, Post
 def index(request):
     # Get all topics
     topics = Topic.objects.all()
+    # Remove from topics if topic is restricted to superusers and user is not superuser
+    if not request.user.is_superuser:
+        topics = topics.filter(restricted_superuser=False)
+    # Remove from topics if topic is restricted to logged in users and user is not logged in
+    if not request.user.is_authenticated:
+        topics = topics.filter(restricted_logged_in=False)
     # pass topics
     context = {'topics': topics}
     return render(request, 'forum/index.html', context)
@@ -31,12 +39,11 @@ def topic(request, topic_id):
 
         # get posts in order so most recent is first
         posts = topic_requested.post_set.order_by('-created_at')
+        posts = posts.filter(post_visible=True)
         sticky_posts = posts.filter(post_sticky=True)
         posts = posts.filter(post_sticky=False)
         # append stick_posts to the top of posts
-        posts = sticky_posts | posts
-        # remove any post_visible=False posts
-        posts = posts.filter(post_visible=True)
+        posts = list(chain(sticky_posts, posts))
 
         paginator = Paginator(posts, 5)  # show 10 posts per page
         page_number = request.GET.get('page')
@@ -65,8 +72,18 @@ def post(request, topic_id, post_id):
         if post_requested.post_topic.id != topic_id:
             messages.add_message(request, messages.ERROR, 'Invalid post')
             return redirect('index')
-        # pass post
-        context = {'post': post_requested, 'topic': post_requested.post_topic}
+        # comment form
+        form = CommentForm()
+        form.fields['comment_post'].initial = post_id
+
+        # get comments so the most recent is last
+        comments = post_requested.comment_set.order_by('created_at')
+        sticky_comments = comments.filter(comment_sticky=True)
+        comments = comments.filter(comment_sticky=False)
+        # insert list sticky_comments to the top of comments
+        comments = list(chain(sticky_comments, comments))
+
+        context = {'post': post_requested, 'topic': post_requested.post_topic, 'form': form, 'comments': comments}
         return render(request, 'forum/post.html', context)
     else:
         # 404
@@ -88,7 +105,13 @@ def new_post(request, topic_id):
             # if topic_requested exists
             if (not topic_requested) or form.cleaned_data['post_topic'] != topic_requested:
                 return redirect('index')
-            # todo security check for topic
+            # check if restricted superuser
+            if topic_requested.restricted_superuser and not request.user.is_superuser:
+                return redirect('index')
+            # check if max langth is violated
+            if len(form.cleaned_data['post_content']) > 5000:
+                messages.add_message(request, messages.ERROR, 'Post content too long')
+                return redirect('index')
             # save form with post_user
             form.save(commit=False)
             form.instance.post_user = request.user
@@ -120,14 +143,13 @@ def new_comment(request, topic_id, post_id):
         form = CommentForm(request.POST)
         # if valid
         if form.is_valid():
+            # ensure max_length is not violated
+            if len(form.cleaned_data['comment_content']) > 5000:
+                messages.add_message(request, messages.ERROR, 'Comment too long')
+                return redirect('post', topic_id=topic_id, post_id=post_id)
             form.save(commit=False)
             form.instance.comment_user = request.user
             form.save()
             # redirect to post with new comment
             messages.add_message(request, messages.SUCCESS, 'Posted successfully')
-            return redirect('post', post_id=form.instance.comment_post.id)
-    else:
-        form = CommentForm()
-        form.fields['comment_post'].initial = post_id
-        context = {'form': form}
-        return render(request, 'forum/form/comment_form.html', context)
+            return redirect('post', topic_id=topic_id, post_id=post_id)

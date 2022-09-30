@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <h1>Topics</h1>
+        </div>
+    </section>
     <section class="py-4 py-xl-2">
         <div class="container">
             <!-- Home Bread crumb -->
@@ -12,33 +16,30 @@
             </nav>
         </div>
     </section>
-
-
-    {% for topic in topics %}
-        {% if topic.restricted_superuser and not request.user.is_superuser %}
-        {% elif topic.restricted_logged_in and not request.user.is_authenticated %}
-        {% else %}
-            <section class="py-4 py-xl-2">
-                <div class="container">
-                    <div class="bg-light border rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-3">
-                        <div class="pb-2 pb-lg-1">
-                            <a class="link-secondary" href="{% url 'topic' topic.id %}"><h2
-                                    class="fw-bold mb-2">{{ topic.topic_name }}</h2></a>
-                            <h5 class="fw-bold mb-2">{{ topic.topic_description }}</h5><br>
-                            <p class="mb-0">Latest: {{ topic.get_latest_post }}
-                                By {{ topic.get_latest_post.post_user.username }}</p>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-12 g-4">
+            {% for topic in topics %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <a class="link-secondary" href="{% url 'topic' topic.id %}"><h5 class="card-title">{{ topic.topic_name }}</h5></a>
+                            <p class="card-text">{{ topic.topic_description }}</p>
+                            <!-- latest as subcard if has latest-->
+                            {% if topic.get_latest_post %}
+                                <div class="card bg-light mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Latest</h6>
+                                        <a href="{{ topic.get_latest_post_link }}" class="link-secondary"><p class="card-text">{{ topic.get_latest_post }}</p></a>
+                                        <p class="card-text">By {{ topic.get_latest_post.post_user.username }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <p class="card-text">Posts: {{ topic.post_set.count }}</p>
                         </div>
-                        <div class="my-2"></div>
-                        <p>Posts: {{ topic.post_set.count }}<br>
-                            <a href="{% url 'new_post' topic.id %}">
-                                <button type="button" class="btn btn-secondary btn-sm">Post</button>
-                            </a>
-                        </p>
                     </div>
                 </div>
-            </section>
-        {% endif %}
-    {% endfor %}
+            {% endfor %}
+        </div>
 
     {{ context }}
 
