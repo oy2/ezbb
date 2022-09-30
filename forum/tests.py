@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
 
 from forum.forms import PostForm
 from forum.models import Topic, Post, Comment
@@ -150,21 +151,44 @@ class CommentModelTest(TestCase):
         self.assertEquals(expected_object_name, 'False')
 
 
-# Test PostForm
-class PostFormTest(TestCase):
+# Test new_post view
+class NewPostViewTest(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
+        # create user for tests
+        test_user1 = User.objects.create_user(username='testuser1', password='1X<ISRUkw+tuK')
+        test_user1.save()
+        # create topic for tests
+        test_topic = Topic.objects.create(topic_name='test topic', topic_description='test topic description')
+        test_topic.save()
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('new_post', kwargs={'topic_id': 1}))
+        self.assertRedirects(response, '/accounts/login/?next=/topic/1/new')
+
+    def test_logged_in_uses_correct_template(self):
+        login = self.client.login(username='testuser1', password='1X<ISRUkw+tuK')
+        response = self.client.get(reverse('new_post', kwargs={'topic_id': 1}))
+
+
+# Test new_comment view
+class NewCommentViewTest(TestCase):
+
+    def setUp(self):
         # create user for tests
         test_user1 = User.objects.create_user(username='testuser1', password='1X<ISRUkw+tuK')
         # create topic for tests
         test_topic = Topic.objects.create(topic_name='test topic', topic_description='test topic description')
+        # create post for tests
+        test_post = Post.objects.create(post_title='test post',
+                                        post_content='test post content',
+                                        post_topic=test_topic,
+                                        post_user=test_user1)
+        # create comment for tests
+        test_comment = Comment.objects.create(comment_content='test comment content',
+                                              comment_post=test_post,
+                                              comment_user=test_user1)
 
-    def test_post_form(self):
-        form_data = {'post_title': 'test post',
-                     'post_content': 'test post content',
-                     'post_topic': Topic.objects.get(id=1),
-                     'post_user': User.objects.get(id=1)}
-        form = PostForm(data=form_data)
-        self.assertTrue(form.is_valid())
-    # todo more tests
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('new_comment', kwargs={'post_id': 1, 'topic_id': 1}))
+        self.assertRedirects(response, '/accounts/login/?next=/topic/1/post/1/new')
