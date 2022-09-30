@@ -33,6 +33,9 @@ class Post(models.Model):
     # sticky bool
     post_sticky = models.BooleanField(default=False)
 
+    def get_latest_comment(self):
+        return self.comment_set.order_by('-created_at').first()
+
     def __str__(self):
         return self.post_title
 
@@ -44,10 +47,7 @@ class Comment(models.Model):
     comment_post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment_visible = models.BooleanField(default=True)
     comment_sticky = models.BooleanField(default=False)
-    # date
     created_at = models.DateTimeField(auto_now_add=True)
-    # visible bool
-    visible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.comment_content

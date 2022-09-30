@@ -2,26 +2,41 @@
 
 {% block content %}
 
+    <section class="py-4 py-xl-2">
+    <div class="container">
+        <!-- Home Bread crumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Home</li>
+            </ol>
+        </nav>
+    </div>
+    </section>
+
+
     {% for topic in topics %}
-        {%  if topic.restricted_superuser and not request.user.is_superuser %} }}
+        {% if topic.restricted_superuser and not request.user.is_superuser %}
         {% elif topic.restricted_logged_in and not request.user.is_authenticated %}
         {% else %}
-        <section class="py-4 py-xl-2">
-            <div class="container">
-                <div class="bg-light border rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
-                    <div class="pb-2 pb-lg-1">
-                        <a class="link-secondary" href="/forum/topic/{{ topic.id }}"><h2 class="fw-bold mb-2">{{ topic.topic_name }}</h2></a>
-                        <h5 class="fw-bold mb-2">{{ topic.topic_description }}</h5><br>
-                        <p class="mb-0">Latest: {{ topic.get_latest_post }}
-                            By {{ topic.get_latest_post.post_user.username }}</p>
+            <section class="py-4 py-xl-2">
+                <div class="container">
+                    <div class="bg-light border rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
+                        <div class="pb-2 pb-lg-1">
+                            <a class="link-secondary" href="{% url 'topic' topic.id %}"><h2
+                                    class="fw-bold mb-2">{{ topic.topic_name }}</h2></a>
+                            <h5 class="fw-bold mb-2">{{ topic.topic_description }}</h5><br>
+                            <p class="mb-0">Latest: {{ topic.get_latest_post }}
+                                By {{ topic.get_latest_post.post_user.username }}</p>
+                        </div>
+                        <div class="my-2"></div>
+                        <p>Posts: {{ topic.post_set.count }}<br>
+                            <a href="{% url 'new_post' topic.id %}">
+                                <button type="button" class="btn btn-secondary">Post</button>
+                            </a>
+                        </p>
                     </div>
-                    <div class="my-2"></div>
-                    <p>Posts: {{ topic.post_set.count }}<br>
-                    <button type="button" class="btn btn-secondary">Post</button>
-                    </p>
                 </div>
-            </div>
-        </section>
+            </section>
         {% endif %}
     {% endfor %}
 
