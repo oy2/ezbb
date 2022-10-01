@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <!-- Title -->
     <section class="py-4 py-xl-2">
         <div class="container">
             <h1>Topics</h1>
         </div>
     </section>
+
+    <!-- Breadcrumb -->
     <section class="py-4 py-xl-2">
         <div class="container">
-            <!-- Home Bread crumb -->
+            <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active" aria-current="page">Home</li>
@@ -16,6 +19,8 @@
             </nav>
         </div>
     </section>
+
+    <!-- Topics -->
     <div class="container">
         <div class="row row-cols-1 row-cols-md-12 g-4">
             {% for topic in topics %}
@@ -24,7 +29,7 @@
                         <div class="card-body">
                             <a class="link-secondary" href="{% url 'topic' topic.id %}"><h5 class="card-title">{{ topic.topic_name }}</h5></a>
                             <p class="card-text">{{ topic.topic_description }}</p>
-                            <!-- latest as subcard if has latest-->
+                            <!-- Check if latest, if so then show it-->
                             {% if topic.get_latest_post %}
                                 <div class="card bg-light mb-3">
                                     <div class="card-body">

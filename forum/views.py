@@ -45,7 +45,7 @@ def topic(request, topic_id):
         # append stick_posts to the top of posts
         posts = list(chain(sticky_posts, posts))
 
-        paginator = Paginator(posts, 5)  # show 10 posts per page
+        paginator = Paginator(posts, 5)  # show 5 posts per page
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -83,7 +83,11 @@ def post(request, topic_id, post_id):
         # insert list sticky_comments to the top of comments
         comments = list(chain(sticky_comments, comments))
 
-        context = {'post': post_requested, 'topic': post_requested.post_topic, 'form': form, 'comments': comments}
+        paginator = Paginator(comments, 5)  # show 5 comments per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {'post': post_requested, 'topic': post_requested.post_topic, 'form': form, 'page_obj': page_obj}
         return render(request, 'forum/post.html', context)
     else:
         # 404

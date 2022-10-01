@@ -2,13 +2,27 @@
 
 {% block content %}
 
+    <!-- Title -->
     <section class="py-4 py-xl-2">
         <div class="container">
             <h1>{{ user.username }}</h1>
         </div>
     </section>
 
-    <!-- User details card with email, firstname, lastname, post number (len(posts), and comment number -->
+    <!-- Breadcrumbs -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="link-secondary" href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="link-secondary">Accounts</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- User details card (Optional) -->
     {% if details %}
         <section class="py-4 py-xl-2">
             <div class="container">
