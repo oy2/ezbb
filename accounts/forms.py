@@ -17,3 +17,12 @@ class RegisterForm(forms.ModelForm):
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
+
+
+# Form for private message
+class PrivateMessageForm(forms.Form):
+    pm_title = forms.CharField(max_length=200)
+    pm_content = forms.CharField(widget=forms.Textarea)
+    widgets = {'pm_content': forms.Textarea(attrs={'maxlength': 5000}),
+               'pm_title': forms.TextInput(attrs={'maxlength': 200})}
+

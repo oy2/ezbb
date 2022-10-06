@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <!-- Title -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <h1>Private Messages</h1>
+        </div>
+    </section>
+
+    <!-- Breadcrumbs -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="link-secondary" href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Private Messages</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+
+{% endblock %}

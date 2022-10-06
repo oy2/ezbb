@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <!-- Title -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <h1>Private Messages</h1>
+        </div>
+    </section>
+
+    <!-- Breadcrumbs -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="link-secondary" href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Private Messages</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+
+    <!-- Content -->
+   {% for message in user_messages %}
+        <div class="container">
+        <div class="card mb-3 {% if message.pm_read_receiver == False %}border-danger{% endif %}">
+            <div class="card-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <h5 class="card-title">{{ message.pm_title }}</h5>
+                            <p class="card-text">Sent by: {{ message.pm_sender.username }}</p>
+                            <p class="card-text">Sent on: {{ message.created_at }}</p>
+                            <p class="card-text">Last updated: {{ message.updated_at }}</p>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p class="card-text">Replies: {{ message.get_num_replies }}</p>
+                            <a href="" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    {% empty %}
+        <div class="container">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">No messages</h5>
+                    <p class="card-text">You have no messages.</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
