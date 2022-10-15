@@ -22,37 +22,58 @@
         </div>
     </section>
 
-
-    <!-- Content -->
-   {% for message in user_messages %}
+    <!-- Information Banner -->
+    <section class="py-4 py-xl-2">
         <div class="container">
-        <div class="card mb-3 {% if message.pm_read_receiver == False %}border-danger{% endif %}">
-            <div class="card-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <h5 class="card-title">{{ message.pm_title }}</h5>
-                            <p class="card-text">Sent by: {{ message.pm_sender.username }}</p>
-                            <p class="card-text">Sent on: {{ message.created_at }}</p>
-                            <p class="card-text">Last updated: {{ message.updated_at }}</p>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <p class="card-text">Replies: {{ message.get_num_replies }}</p>
-                            <a href="" class="btn btn-primary">View</a>
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">Private Messages</h4>
+                <p>Private messages are a way to communicate with other users on the site. You can send a private
+                    message to any user on the site by clicking on their username and selecting "Send Private
+                    Message".</p>
+            </div>
+        </div>
+
+        <!-- Content -->
+        {% for message in user_messages %}
+            <div class="container">
+                <div class="card mb-3 {% if message.pm_read_receiver == False and message.pm_receiver == request.user %}border-danger{% endif %}">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <h5 class="card-title">{{ message.pm_title }}</h5>
+                                    {% if message.pm_receiver != request.user %}
+                                        <p class="card-text">Sent to: <a
+                                                href="{% url 'view_user' message.pm_receiver.id %}"
+                                                class="link-secondary">{{ message.pm_receiver.username }}</a></p>
+                                    {% else %}
+                                        <p class="card-text">Sent by: <a
+                                                href="{% url 'view_user' message.pm_sender.id %}"
+                                                class="link-secondary">{{ message.pm_sender.username }}</a></p>
+                                    {% endif %}
+                                    <p class="card-text">Replies: {{ message.get_num_replies }}</p>
+                                    <p class="card-text">Sent on: {{ message.created_at }}</p>
+                                    <p class="card-text">Last updated: {{ message.updated_at }}</p>
+                                </div>
+                                <div class="col-12 col-md-6 d-flex justify-content-end">
+                                    <!-- Center button text -->
+                                    <div class="d-flex align-items-center">
+                                        <a href="{% url 'view_pm' message.id %}" class="btn btn-primary">View</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
-    {% empty %}
-        <div class="container">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">No messages</h5>
-                    <p class="card-text">You have no messages.</p>
+        {% empty %}
+            <div class="container">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">No messages</h5>
+                        <p class="card-text">You have no messages.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
 {% endblock %}

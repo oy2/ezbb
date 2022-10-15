@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
-from accounts.forms import RegisterForm, PrivateMessageForm
-from accounts.models import PrivateMessage
+from accounts.forms import RegisterForm, PrivateMessageForm, PrivateMessageReplyForm
+from accounts.models import PrivateMessage, PrivateMessageReplies
 
 
 # Register view
@@ -77,7 +78,7 @@ def send_pm(request, user_id):
             message.save()
             # redirect to profile
             messages.add_message(request, messages.SUCCESS, 'Message sent successfully')
-            return redirect('profile')
+            return redirect('view_pms')
     # else
     else:
         form = PrivateMessageForm()
@@ -97,8 +98,14 @@ def send_pm(request, user_id):
 def view_messages(request):
     # get all messages sent to user, order by pm_read_receiver, updated_at
     user_messages = PrivateMessage.objects.filter(pm_receiver=request.user).order_by('pm_read_receiver', 'updated_at')
+    # get all messages sent by user, order by pm_read_sender, updated_at
+    sent_messages = PrivateMessage.objects.filter(pm_sender=request.user).order_by('pm_read_sender', 'updated_at')
+    # merge messages
+    messages_list = list(user_messages) + list(sent_messages)
+    # sort messages
+    messages_list.sort(key=lambda x: x.updated_at, reverse=True)
     # pass messages
-    context = {'user_messages': user_messages}
+    context = {'user_messages': messages_list}
     return render(request, 'accounts/messages.html', context)
 
 
@@ -110,6 +117,28 @@ def view_message(request, message_id):
         # redirect to messages
         messages.add_message(request, messages.ERROR, 'You can\'t view this message')
         return redirect('view_messages')
+
+    # forms/PrivateMessageReplyForm
+    if request.method == 'POST':
+        # check form
+        form = PrivateMessageReplyForm(request.POST)
+        # if valid
+        if form.is_valid():
+            # Create reply PrivateMessageReplies
+            reply = PrivateMessageReplies(pmr_pm=message, pmr_sender=request.user,
+                                          pmr_content=form.cleaned_data['pmr_content'])
+            # save reply
+            reply.save()
+            # redirect to message
+            messages.add_message(request, messages.SUCCESS, 'Reply sent successfully')
+            # make message unread for other user, update updated_at
+            if message.pm_receiver == request.user:
+                message.pm_read_sender = False
+            else:
+                message.pm_read_receiver = False
+            message.save()
+            return redirect('view_pm', message_id=message_id)
+
     # if receiver
     if message.pm_receiver == request.user:
         if not message.pm_read_receiver:
@@ -120,7 +149,10 @@ def view_message(request, message_id):
         if not message.pm_read_sender:
             message.pm_read_sender = True
             message.save()
+
     replies = message.get_replies()
+    form = PrivateMessageReplyForm()
+
     # pass message
-    context = {'message': message, 'replies': replies}
+    context = {'message': message, 'replies': replies, 'form': form}
     return render(request, 'accounts/message.html', context)

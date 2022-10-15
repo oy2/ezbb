@@ -13,11 +13,11 @@ class PrivateMessage(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_replies(self):
-        return PrivateMessage.objects.filter(pmr_pm=self.pk)
+        return PrivateMessageReplies.objects.filter(pmr_pm=self.pk)
 
     # get number of replies
     def get_num_replies(self):
-        return PrivateMessage.objects.filter(pmr_pm=self.pk).count()
+        return PrivateMessageReplies.objects.filter(pmr_pm=self.pk).count()
 
     def __str__(self):
         return self.pm_content

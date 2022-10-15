@@ -6,8 +6,12 @@
     <section class="py-4 py-xl-2">
         <div class="container">
             <h1>{{ user.username }}</h1>
+            {% if user.is_staff %}
+                <p class="lead">Staff</p>
+            {% endif %}
         </div>
     </section>
+
 
     <!-- Breadcrumbs -->
     <section class="py-4 py-xl-2">
@@ -21,6 +25,15 @@
             </nav>
         </div>
     </section>
+
+    <!-- Send Private Message Button -->
+    {% if user != request.user %}
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <a class="btn btn-primary" href="{% url 'send_pm' user.id %}">Send Private Message</a>
+        </div>
+    </section>
+    {% endif %}
 
     <!-- User details card (Optional) -->
     {% if details %}

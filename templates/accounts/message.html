@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 
 {% block content %}
@@ -15,9 +16,64 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a class="link-secondary" href="{% url 'index' %}">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Private Messages</li>
+                    <li class="breadcrumb-item"><a class="link-secondary" href="{% url 'view_pms' %}">Private
+                        Messages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ message.pm_title }}</li>
                 </ol>
             </nav>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="py-4 py-xl-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col xl-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>{{ message.pm_title }}</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><a href="{% url 'view_user' message.pm_sender.id %}" class="link-secondary">{{ message.pm_sender.username }}</a></h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ message.pm_content }}</p>
+                                </div>
+                            </div>
+                            <!-- Replies -->
+                            {% for reply in replies %}
+                                <br>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5><a href="{% url 'view_user' reply.pmr_sender.id %}" class="link-secondary">{{ reply.pmr_sender }}</a></h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>{{ reply.pmr_content }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <section class="py-4 py-xl-2">
+                                <div class="container">
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+                                        {{ form | crispy }}
+                                        <button type="submit" class="btn btn-secondary">Send</button>
+                                    </form>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="card-footer">
+                            <p>From: {{ message.pm_sender.username }} {% if not message.pm_read_sender %}(Unread){% endif %}</p>
+                            <p>To: {{ message.pm_receiver.username }} {% if not message.pm_read_receiver %}(Unread){% endif %}</p>
+                            <p>Sent: {{ message.created_at }}</p>
+                            <p>Last Updated: {{ message.updated_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

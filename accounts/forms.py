@@ -26,3 +26,8 @@ class PrivateMessageForm(forms.Form):
     widgets = {'pm_content': forms.Textarea(attrs={'maxlength': 5000}),
                'pm_title': forms.TextInput(attrs={'maxlength': 200})}
 
+
+# Form for private message reply
+class PrivateMessageReplyForm(forms.Form):
+    pmr_content = forms.CharField(widget=forms.Textarea)
+    widgets = {'pmr_content': forms.Textarea(attrs={'maxlength': 5000})}
