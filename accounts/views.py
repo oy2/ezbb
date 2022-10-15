@@ -94,7 +94,7 @@ def send_pm(request, user_id):
     context = {'form': form, 'user': user}
     return render(request, 'accounts/private_message.html', context)
 
-
+@login_required
 def view_messages(request):
     # get all messages sent to user, order by pm_read_receiver, updated_at
     user_messages = PrivateMessage.objects.filter(pm_receiver=request.user).order_by('pm_read_receiver', 'updated_at')
@@ -108,7 +108,7 @@ def view_messages(request):
     context = {'user_messages': messages_list}
     return render(request, 'accounts/messages.html', context)
 
-
+@login_required
 def view_message(request, message_id):
     # get message
     message = get_object_or_404(PrivateMessage, pk=message_id)
