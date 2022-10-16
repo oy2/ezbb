@@ -3,6 +3,7 @@
 **ezbb** is a simple discussion board software written in Django. It is designed to be easy to use and easy to set up. It is also designed to be secure and fast with simple modern design. It is designed for small deployments and not as a drop-in for large community software.
 
 ## Table of Contents
+***
 * [Deploying](#deploying)
 * [Features](#features)
 * [Planned Features](#planned-features)
