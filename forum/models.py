@@ -34,8 +34,12 @@ class Post(models.Model):
     post_visible = models.BooleanField(default=True)
     # sticky bool
     post_sticky = models.BooleanField(default=False)
+    # updated_at
+    updated_at = models.DateTimeField(auto_now=True)
 
     def get_latest_comment(self):
+        # return the latest comment
+        #return Comment.objects.filter(comment_post=self).order_by('-created_at').first()
         return self.comment_set.order_by('-created_at').first()
 
     def __str__(self):

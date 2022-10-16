@@ -39,9 +39,9 @@
                                 <h6 class="card-subtitle mb-2 text-muted">By: {{ post.post_user.username }}</h6>
                                 <p class="card-text">Last Comment
                                     By:
-                                    <a href="{% url 'view_user' topic.get_latest_comment.comment_user.id|default:post.post_user.id %}"
-                                       class="link-secondary">{{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}</a>
-                                    on {{ topic.get_latest_comment.created_at| default:post.created_at }} | Sticky {% if post.post_locked %} | Locked{% endif %}</p>
+                                    <a href="{% url 'view_user' post.get_latest_comment.comment_user.id|default:post.post_user.id %}"
+                                       class="link-secondary">{{ post.get_latest_comment.comment_user.username|default:post.post_user.username }}</a>
+                                    on {{ post.get_latest_comment.created_at| default:post.created_at }} | Sticky {% if post.post_locked %} | Locked{% endif %}</p>
                             </div>
                         </div>
                     </div>
@@ -57,9 +57,9 @@
                             <h6 class="card-subtitle mb-2 text-muted">By: {{ post.post_user.username }}</h6>
                             <p class="card-text">Last Comment
                                 By:
-                                <a href="{% url 'view_user' topic.get_latest_comment.comment_user.id|default:post.post_user.id %}"
-                                   class="link-secondary">{{ topic.get_latest_comment.comment_user.username|default:post.post_user.username }}</a>
-                                on {{ topic.get_latest_comment.created_at| default:post.created_at }} {% if post.post_locked %} | Locked{% endif %}</p>
+                                <a href="{% url 'view_user' post.get_latest_comment.comment_user.id|default:post.post_user.id %}"
+                                   class="link-secondary">{{ post.get_latest_comment.comment_user.username|default:post.post_user.username }}</a>
+                                on {{ post.get_latest_comment.created_at| default:post.created_at }} {% if post.post_locked %} | Locked{% endif %}</p>
                         </div>
                     </div>
                 </div>

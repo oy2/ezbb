@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
 from forum.forms import PostForm, CommentForm
 from forum.models import Topic, Post
@@ -38,7 +39,9 @@ def topic(request, topic_id):
             return redirect('index')
 
         # get posts in order so most recent is first
-        posts = topic_requested.post_set.order_by('-created_at')
+        posts = topic_requested.post_set.order_by('-updated_at')
+        for post in posts:
+            print(post.post_title, post.updated_at)
         posts = posts.filter(post_visible=True)
         sticky_posts = posts.filter(post_sticky=True)
         posts = posts.filter(post_sticky=False)
@@ -159,6 +162,9 @@ def new_comment(request, topic_id, post_id):
             form.save(commit=False)
             form.instance.comment_user = request.user
             form.save()
+            # Update the post to show it was updated
+            post_requested.updated_at = timezone.now()
+            post_requested.save()
             # redirect to post with new comment
             messages.add_message(request, messages.SUCCESS, 'Posted successfully')
             return redirect('post', topic_id=topic_id, post_id=post_id)
