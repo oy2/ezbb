@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from accounts import views
 
+# The following is a list of all the paths that are available to the user for the accounts app.
 urlpatterns = [
     # register
     path('register/', views.register, name='register'),

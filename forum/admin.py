@@ -6,15 +6,20 @@ from django.http import HttpResponseRedirect
 from .models import Topic, Post, Comment, Settings
 
 
-# Comment inline class
 class CommentInline(admin.TabularInline):
+    """
+    Inline class for comments. Allows comments to be edited on the post admin page.
+    """
     model = Comment
     extra = 0
 
 
-# Register Post
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    """
+    Admin class for posts. Allows posts to be edited on the admin page. Comments are displayed as an
+    inline.
+    """
     list_display = (
         'post_topic', 'post_title', 'post_user', 'created_at', 'updated_at', 'post_locked', 'post_visible',
         'post_sticky')
@@ -33,6 +38,10 @@ admin.site.register(Topic)
 
 @admin.register(Settings)
 class SettingsAdmin(admin.ModelAdmin):
+    """
+    Admin class for settings. Allows settings to be edited on the admin page. Restricts deleting the settings object, or
+    adding a second one.
+    """
     # disable new object button
     def has_add_permission(self, request):
         return False

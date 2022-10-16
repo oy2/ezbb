@@ -3,8 +3,11 @@ from django import forms
 from django.contrib.auth.models import User
 
 
-# Register user form
 class RegisterForm(forms.ModelForm):
+    """
+    Register user form. Allows user to submit required fields to register an account. Additionally, validates
+    password and password2 fields to ensure they match.
+    """
     password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput())
 
@@ -19,8 +22,10 @@ class RegisterForm(forms.ModelForm):
         return cd['password2']
 
 
-# Form for private message
 class PrivateMessageForm(forms.Form):
+    """
+    Private message form. Allows user to submit required fields to send a private message.
+    """
     pm_title = forms.CharField(max_length=200)
     pm_content = forms.CharField(widget=forms.Textarea)
     pm_title.label = 'Title'
@@ -29,8 +34,10 @@ class PrivateMessageForm(forms.Form):
                'pm_title': forms.TextInput(attrs={'maxlength': 200})}
 
 
-# Form for private message reply
 class PrivateMessageReplyForm(forms.Form):
+    """
+    Private message reply form. Allows user to submit required fields to reply to a private message.
+    """
     pmr_content = forms.CharField(widget=forms.Textarea)
     pmr_content.label = 'Reply'
     widgets = {'pmr_content': forms.Textarea(attrs={'maxlength': 5000})}

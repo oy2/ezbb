@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+# The following is a list of all the paths that are available to the user for the forum app.
 urlpatterns = [
     path('', views.index, name='index'),
     # topic/topic_id
