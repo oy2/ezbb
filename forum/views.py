@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from forum.forms import PostForm, CommentForm
-from forum.models import Topic, Post
+from forum.models import Topic, Post, Settings
 
 
 # View for index
@@ -47,8 +47,8 @@ def topic(request, topic_id):
         posts = posts.filter(post_sticky=False)
         # append stick_posts to the top of posts
         posts = list(chain(sticky_posts, posts))
-
-        paginator = Paginator(posts, 5)  # show 5 posts per page
+        settings = Settings.load()
+        paginator = Paginator(posts, settings.posts_per_page)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -86,7 +86,8 @@ def post(request, topic_id, post_id):
         # insert list sticky_comments to the top of comments
         comments = list(chain(sticky_comments, comments))
 
-        paginator = Paginator(comments, 5)  # show 5 comments per page
+        settings = Settings.load()
+        paginator = Paginator(comments, settings.comments_per_page)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 

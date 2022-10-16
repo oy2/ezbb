@@ -6,10 +6,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.forms import RegisterForm, PrivateMessageForm, PrivateMessageReplyForm
 from accounts.models import PrivateMessage, PrivateMessageReplies
+from forum.models import Settings
 
 
 # Register view
 def register(request):
+    settings = Settings.load()
+    # check settings.accounts_signup_enabled
+    if not settings.accounts_signup_enabled:
+        messages.add_message(request, messages.ERROR, 'Sign up is disabled')
+        return redirect('index')
     # if post RegisterForm
     if request.method == 'POST':
         # form

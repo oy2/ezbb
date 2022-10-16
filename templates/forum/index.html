@@ -20,6 +20,18 @@
         </div>
     </section>
 
+    <!-- Welcome Banner -->
+    {% if settings.index_welcome_banner_enabled %}
+        <section class="py-4 py-xl-2">
+            <div class="container">
+                <div class="alert alert-dark" role="alert">
+                    <h4 class="alert-heading">{{ settings.index_welcome_banner_title }}</h4>
+                    <p>{{ settings.index_welcome_banner_content }}</p>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
     <!-- Topics -->
     <div class="container">
         <div class="row row-cols-1 row-cols-md-12 g-4">
@@ -27,15 +39,20 @@
                 <div class="col">
                     <div class="card h-100">
                         <div class="card-body">
-                            <a class="link-secondary" href="{% url 'topic' topic.id %}"><h5 class="card-title">{{ topic.topic_name }}</h5></a>
+                            <a class="link-secondary" href="{% url 'topic' topic.id %}"><h5
+                                    class="card-title">{{ topic.topic_name }}</h5></a>
                             <p class="card-text">{{ topic.topic_description }}</p>
                             <!-- Check if latest, if so then show it-->
                             {% if topic.get_latest_post %}
                                 <div class="card bg-light mb-3">
                                     <div class="card-body">
                                         <h6 class="card-title">Latest</h6>
-                                        <a href="{{ topic.get_latest_post_link }}" class="link-secondary"><p class="card-text">{{ topic.get_latest_post }}</p></a>
-                                        <p class="card-text">By <a href="{% url 'view_user' topic.get_latest_post.post_user.id %}" class="link-secondary">{{ topic.get_latest_post.post_user.username }}</a></p>
+                                        <a href="{{ topic.get_latest_post_link }}" class="link-secondary"><p
+                                                class="card-text">{{ topic.get_latest_post }}</p></a>
+                                        <p class="card-text">By <a
+                                                href="{% url 'view_user' topic.get_latest_post.post_user.id %}"
+                                                class="link-secondary">{{ topic.get_latest_post.post_user.username }}</a>
+                                        </p>
                                     </div>
                                 </div>
                             {% endif %}
@@ -50,3 +67,4 @@
     {{ context }}
 
 {% endblock %}
+
