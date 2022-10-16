@@ -3,11 +3,15 @@ from django.contrib.auth import views as auth_views
 
 from accounts import views
 
+# The following is a list of all the paths that are available to the user for the accounts app.
 urlpatterns = [
     # register
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('profile/<int:user_id>/', views.view_user, name='view_user'),
+    path('profile/<int:user_id>/message/', views.send_pm, name='send_pm'),
+    path('messages/', views.view_messages, name='view_pms'),
+    path('messages/view_message/<int:message_id>/', views.view_message, name='view_pm'),
     # login (django.contrib.auth.views.LoginView)
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     # logout (django.contrib.auth.views.LogoutView)

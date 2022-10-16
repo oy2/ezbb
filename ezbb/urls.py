@@ -21,3 +21,7 @@ urlpatterns = [
     path('', include('forum.urls')),
     path('accounts/', include('accounts.urls')),
 ]
+
+admin.site.site_header = "ezbb Admin"
+admin.site.site_title = "ezbb Admin"
+admin.site.index_title = "Welcome to ezbb Admin"
